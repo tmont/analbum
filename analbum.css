@@ -554,6 +554,8 @@
 	color: white;
 	opacity: 0.5;
 	margin-bottom: 5px;
+	display: flex;
+	align-items: baseline;
 }
 
 .analbum-recommended-badge {
@@ -579,10 +581,6 @@
 	text-shadow: 1px 1px 1px black;
 }
 
-.analbum-track-item {
-	display: flex;
-
-}
 .analbum-track-item .analbum-track-number {
 	font-family: monospace;
 }
