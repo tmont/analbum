@@ -270,7 +270,7 @@
 							<div class="analbum-track-credits-container">
 								<div class="analbum-track-writers-container">
 									<span class="analbum-track-writers"></span>
-									<span>▾</span>
+									<span style="font-size: 75%">▾</span>
 								</div>
 								<div class="analbum-track-credits-popup">
 									<div class="analbum-track-writers-container">
