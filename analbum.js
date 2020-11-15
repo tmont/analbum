@@ -1,5 +1,4 @@
 (function(window, document) {
-
 	const parseDurationMs = (duration) => {
 		if (typeof(duration) === 'number') {
 			return duration;
