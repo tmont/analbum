@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Anal Bum Test</title>
+		<link rel="stylesheet" href="./analbum.css" />
+		<style>
+			body {
+				margin: 0;
+				background-color: #363636;
+				background-image: url(./bg-tile.png);
+				background-repeat: repeat;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="player"></div>
+
+		<script src="./analbum.js"></script>
+		<script>
+			const albums = [
+				analbum.album(
+					'Public Domain Beethoven',
+					[
+						analbum.track('Symphony No. 5 in C Minor, Op. 67 - I: Allegro con Brio ', {
+							duration: 500158,
+							date: 1808,
+							artist: 'Ludwig van Beethoven',
+							trackNum: 1,
+							sources: [
+								analbum.source('./audio/beethoven-no5_1.mp3', {
+									size: 8064128,
+									mimetype: 'audio/mpeg',
+								}),
+							],
+							writers: [ 'Ludwig van Beethoven' ],
+							contributors: [
+								analbum.contributor('Unknown orchestra', [ 'winds', 'brass', 'percussion' ]),
+							],
+						}),
+						analbum.track('Piano Sonata No. 14 in C♯ minor, Op. 27, No. 2 - Quasi una fantasia - III: Presto Agitato', {
+							duration: 493714,
+							date: 1801,
+							artist: 'Ludwig van Beethoven',
+							trackNum: 2,
+							sources: [
+								analbum.source('./audio/beethoven-moonlight_3.ogg', {
+									size: 4823167,
+									mimetype: 'audio/ogg',
+								}),
+							],
+							writers: ['Ludwig van Beethoven'],
+							contributors: [
+								analbum.contributor('Unknown performer', [ 'piano' ]),
+							],
+						}),
+					],
+					{
+						date: '2020',
+						artist: 'Ludwig van Beethoven',
+						description: 'A tiny collection of public domain Beethoven works.',
+					},
+				),
+				analbum.album(
+					'Public Domain Chopin',
+					[
+						analbum.track('Prelude in B♭ minor, Op. 28, No. 16 - Hades', {
+							duration: 75312,
+							date: 1839,
+							artist: 'Frédéric Chopin',
+							trackNum: 1,
+							sources: [
+								analbum.source('./audio/chopin-hades.mp3', {
+									size: 1745832,
+									mimetype: 'audio/mpeg',
+								}),
+							],
+							writers: [ 'Frédéric Chopin' ],
+							contributors: [
+								analbum.contributor('Unknown performer', ['piano']),
+							],
+						}),
+						analbum.track('Waltz in C♯ minor, Op. 64, No. 2', {
+							duration: 230059,
+							date: 1847,
+							artist: 'Frédéric Chopin',
+							trackNum: 2,
+							sources: [
+								analbum.source('./audio/chopin-waltz-64_2.ogg', {
+									size: 2825719,
+									mimetype: 'audio/ogg',
+								}),
+							],
+							writers: ['Frédéric Chopin'],
+							contributors: [
+								analbum.contributor('Unknown performer', ['piano']),
+							],
+						}),
+					],
+					{
+						date: '2020',
+						artist: 'Frédéric Chopin',
+						description: 'A tiny collection of public domain Chopin works.',
+					},
+				),
+			];
+
+			const player = new analbum.UI({
+				description: [
+					'This is an example of <em>analbum</em> using public domain audio.',
+				],
+				albums,
+			});
+			player.mount(document.getElementById('player'));
+		</script>
+	</body>
+</html>
