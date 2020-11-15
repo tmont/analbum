@@ -172,10 +172,7 @@
 			this.sources = options.sources || [];
 			this.lyrics = options.lyrics || null;
 			this.trackNum = options.trackNum || null;
-			this.artist = options.artist || null;
 			this.date = options.date || null;
-			this.genres = options.genres || [];
-			this.description = options.description || null;
 			this.score = options.score || null;
 			this.writers = options.writers || [];
 			this.contributors = options.contributors || [];
@@ -190,7 +187,6 @@
 			this.tracks = tracks.sort((a, b) => a.trackNum < b.trackNum ? -1 : 1);
 			this.artist = options.artist || null;
 			this.date = options.date || null;
-			this.genres = options.genres || [];
 			this.description = options.description || null;
 			this.coverArt = options.coverArt || null;
 			this.downloadLink = options.downloadLink || null;
