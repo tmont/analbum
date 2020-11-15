@@ -426,7 +426,7 @@
 	align-items: center;
 	border: 1px solid #484848;
 	border-radius: 2px;
-	background-image: radial-gradient(farthest-corner at 10px 10px, #5d2f6a80, rgba(36, 36, 36, 50));
+	background-image: radial-gradient(farthest-corner at 10px 10px, rgba(93, 47, 106, 0.5), rgba(36, 36, 36, 0.5));
 }
 .analbum-album-art-custom {
 	display: none;
