@@ -177,6 +177,10 @@
 	display: block;
 }
 
+.analbum-info-global-content a {
+	color: inherit;
+}
+
 .analbum-seeking-container {
 	position: absolute;
 	border: 1px solid #666666;
