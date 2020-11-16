@@ -13,19 +13,25 @@ The code is pretty spaghetti-like, but it probably works.
 
 ## Screenshots
 
-![analbum screenshot](./analbum.png)
+![analbum](./analbum.png)
 
-![analbum mobile screenshot](./analbum-mobile.png)
+![analbum mobile](./analbum-mobile.png)
+
+![analbum markers](./analbum-markers.png)
 
 ## Features
 
-- Audio playback
-- Audio seek
+- Audio playback/pause
+- Multiple audio sources per track
+- Seek to arbitrary timestamp
 - Easy navigation between albums and tracks
 - Lyrics support (in .lrc format)
+    - highlights active line in real time
+    - each lyric line seeks to time on click
 - Download links for audio, scores and albums
 - Mobile-friendly
-- deep-linking directly to an album or track via `history.replaceState()`
+- Deep-links directly to an album or track via query string parameters using `history.replaceState()`
+- Time markers with annotations
 - Works on Chrome and Firefox, and maybe some other browsers
 
 ## Usage

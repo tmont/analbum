@@ -176,6 +176,7 @@
 			this.writers = options.writers || [];
 			this.contributors = options.contributors || [];
 			this.recommended = !!options.recommended;
+			this.markers = options.markers || [];
 		}
 	}
 
@@ -245,6 +246,16 @@
 </div>	
 `;
 
+	const markerTemplate = `
+<div class="analbum-track-marker">
+	<div class="analbum-track-marker-line"></div>
+	<div class="analbum-track-marker-label">
+		<div class="analbum-track-marker-time"></div>
+		<div class="analbum-divider"></div>
+		<div class="analbum-track-marker-content"></div>
+	</div>
+</div>`;
+
 	const lyricLineTemplate = `<div class="analbum-lyric-line"><span></span></div>`;
 
 	const template = `
@@ -296,17 +307,24 @@
 				
 				<div class="analbum-progress-container">
 					<div class="analbum-progress-time"></div>
-					<div class="analbum-progress-bar">
-						<div class="analbum-seeking-container">
-							<div class="analbum-tooltip-outer bottom"></div>
-							<div class="analbum-tooltip-inner bottom"></div>
-							<span></span>
+					<div class="analbum-progress-bar-container">
+						<div class="analbum-progress-bar">
+							<div class="analbum-seeking-container">
+								<div class="analbum-tooltip-outer bottom"></div>
+								<div class="analbum-tooltip-inner bottom"></div>
+								<span></span>
+							</div>
+							<div class="analbum-progress-progress"></div>
 						</div>
-						<div class="analbum-progress-progress"></div>
 					</div>
 					<div class="analbum-progress-duration"></div>
 				</div>
 				<div class="analbum-controls">
+					<div class="analbum-controls-left">
+						<div class="analbum-control analbum-toggle-markers" title="Toggle markers">
+							show markers
+						</div>
+					</div>
 					<div class="analbum-controls-center">
 						<div class="analbum-control analbum-prev" title="Previous track"><i class="analbum-icon-previous2"></i></div>
 						<div class="analbum-control analbum-play-pause" title="Play"><i class="analbum-icon-play3"></i></div>
@@ -367,6 +385,7 @@
 			this.showingContributors = false;
 			this.showingGlobalInfo = false;
 			this.showingAlbumInfo = false;
+			this.showingMarkers = false;
 		}
 
 		mount(element) {
@@ -466,6 +485,9 @@
 
 			this.find('.analbum-toggle-lyrics').addEventListener('click', () => {
 				this.toggleLyrics();
+			});
+			this.find('.analbum-toggle-markers').addEventListener('click', () => {
+				this.toggleMarkers();
 			});
 
 			this.find('.analbum-track-writers-container').addEventListener('click', () => {
@@ -961,6 +983,71 @@
 				contributorsEl.appendChild(el);
 			});
 
+			const markerNode = parseTemplate(markerTemplate);
+			const progressBar = this.find('.analbum-progress-bar-container');
+			progressBar.querySelectorAll('.analbum-track-marker').forEach((marker) => {
+				marker.parentNode.removeChild(marker);
+			});
+
+			if (track.markers.length) {
+				this.find('.analbum-toggle-markers').style.display = 'block';
+				const prevNodes = [];
+				const barWidth = this.find('.analbum-progress-bar').getBoundingClientRect().width;
+				track.markers.forEach((marker, i) => {
+					const time = parseDurationMs(marker.time);
+					const offset = time / track.duration;
+					const node = markerNode.cloneNode(true);
+					const prettyTime = prettyDurationFromMs(time);
+
+					node.querySelector('.analbum-track-marker-content').innerText = marker.label;
+					node.querySelector('.analbum-track-marker-time').innerText = prettyTime;
+					node.style.left = (offset * 100) + '%';
+					const label = node.querySelector('.analbum-track-marker-label');
+					label.addEventListener('click', () => {
+						this.seekToTime(time);
+					});
+					label.setAttribute('title', `seek to ${prettyTime}`);
+
+					progressBar.appendChild(node);
+
+					const expectedWidth = (marker.label.length * 5.25) + 13;
+
+					const invalidLevels = {};
+					for (let j = 0; j < prevNodes.length; j++) {
+						const data = prevNodes[j];
+						const prevOffset = data.offset;
+						const level = data.level;
+						const distance = (offset * barWidth) - (prevOffset * barWidth);
+						if (distance < expectedWidth + 10) {
+							invalidLevels[level] = 1;
+						}
+					}
+
+					const levels = {};
+					for (let j = 0; j < 10; j++) {
+						levels[j] = invalidLevels[j] || 0;
+					}
+
+					const level = Object.keys(levels)
+						.map(x => Number(x))
+						.sort()
+						.map(x => levels[x])
+						.findIndex(x => x === 0);
+
+					const height = 35 + (level * 30);
+
+					const line = node.querySelector('.analbum-track-marker-line');
+					line.style.height = height + 'px';
+
+					prevNodes.push({
+						offset,
+						level,
+					});
+				});
+			} else {
+				this.find('.analbum-toggle-markers').style.display = 'none';
+			}
+
 			this.updateProgress();
 		}
 
@@ -1047,7 +1134,13 @@
 			const lyricsContainer = this.find('.analbum-lyrics-container');
 			this.hidingLyrics = !this.hidingLyrics;
 			lyricsContainer.style.display = this.hidingLyrics ? 'none' : 'block';
-			this.updateMenuIcons();
+			this.find('.analbum-toggle-lyrics').innerText = this.hidingLyrics ? 'show lyrics' : 'hide lyrics';
+		}
+
+		toggleMarkers() {
+			this.showingMarkers = !this.showingMarkers;
+			this.container.classList.toggle('analbum-showing-markers');
+			this.find('.analbum-toggle-markers').innerText = this.showingMarkers ? 'hide markers' : 'show markers';
 		}
 
 		toggleContributors(show) {
@@ -1132,8 +1225,6 @@
 				'analbum-icon-play3';
 
 			playPause.setAttribute('title', this.isPlaying() ? 'Pause' : 'Play');
-
-			this.find('.analbum-toggle-lyrics').innerText = this.hidingLyrics ? 'show lyrics' : 'hide lyrics';
 		}
 
 		mute() {
@@ -1177,5 +1268,6 @@
 		score: (...args) => new Score(...args),
 		downloadLink: (...args) => new DownloadLink(...args),
 		contributor: (...args) => new Contributor(...args),
+		marker: (time, label) => ({ time, label }),
 	};
 }(window, document));
