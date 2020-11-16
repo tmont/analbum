@@ -25,6 +25,7 @@ The code is pretty spaghetti-like, but it probably works.
 - Lyrics support (in .lrc format)
 - Download links for audio, scores and albums
 - Mobile-friendly
+- deep-linking directly to an album or track via `history.replaceState()`
 - Works on Chrome and Firefox, and maybe some other browsers
 
 ## Usage

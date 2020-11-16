@@ -607,6 +607,32 @@
 			document.addEventListener('click', this.handleDocumentClick);
 
 			this.wireAudioEvents();
+			this.initializeAlbumAndTrack();
+		}
+
+		initializeAlbumAndTrack() {
+			const qs = new URLSearchParams(window.location.search);
+
+			let album;
+			let track;
+
+			if (qs.has('album')) {
+				const albumName = qs.get('album').toLowerCase();
+				album = this.albums.find(album => album.name.toLowerCase() === albumName);
+				if (album) {
+					this.selectAlbum(album);
+					if (qs.has('track')) {
+						const trackName = qs.get('track').toLowerCase().replace(/’/g, '\'');
+						track = album.tracks.find(track => track.name.toLowerCase().replace(/’/g, '\'') === trackName);
+						if (track) {
+							this.selectTrack(track);
+							return;
+						}
+					}
+				}
+			}
+
+			// default to first track on first album
 			this.setNextTrack(1);
 		}
 
@@ -821,8 +847,16 @@
 				return;
 			}
 
+
 			const playingAlbum = this.getPlayingAlbum();
 			const track = this.currentTrack;
+
+			if (window.history) {
+				const url = new URL(window.location.href);
+				url.searchParams.set('album', playingAlbum.name);
+				url.searchParams.set('track', track.name);
+				window.history.replaceState(null, '', url.href);
+			}
 
 			const lyricsContainer = this.find('.analbum-lyrics-container');
 			const lyricsLines = this.find('.analbum-lyrics-lines');
