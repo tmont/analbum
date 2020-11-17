@@ -16,7 +16,9 @@
 	const prettyDurationFromMs = (ms) => {
 		const oneMinute = 60 * 1000;
 		const minutes = Math.floor(ms / oneMinute);
-		const seconds = Math.round((ms - (minutes * oneMinute)) / 1000);
+
+		// floor is needed instead of round or you might get a xx:60 timestamp
+		const seconds = Math.floor((ms - (minutes * oneMinute)) / 1000);
 		if (isNaN(minutes)) {
 			return String.fromCharCode(0x2026);
 		}
