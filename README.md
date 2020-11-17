@@ -32,6 +32,16 @@ The code is pretty spaghetti-like, but it probably works.
 - Mobile-friendly
 - Deep-links directly to an album or track via query string parameters using `history.replaceState()`
 - Time markers with annotations
+- Keyboard shortcuts
+    - `L`: toggle lyrics
+    - `M`: toggle markers
+    - `Space`: play/pause
+    - `Left`: seek backward 10 seconds
+    - `Right`: seek forward 10 seconds
+    - `Ctrl+Left`: go to previous track
+    - `Ctrl+Right`: go to next track
+    - `Alt+Left`: go to previous album
+    - `Alt+Right`: go to next album
 - Works on Chrome and Firefox, and maybe some other browsers
 
 ## Usage

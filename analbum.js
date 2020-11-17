@@ -321,18 +321,18 @@
 				</div>
 				<div class="analbum-controls">
 					<div class="analbum-controls-left">
-						<div class="analbum-control analbum-toggle-markers" title="Toggle markers">
-							show markers
+						<div class="analbum-control analbum-toggle-markers" title="Toggle markers (M)">
+							<span>show</span> markers
 						</div>
 					</div>
 					<div class="analbum-controls-center">
-						<div class="analbum-control analbum-prev" title="Previous track"><i class="analbum-icon-previous2"></i></div>
-						<div class="analbum-control analbum-play-pause" title="Play"><i class="analbum-icon-play3"></i></div>
-						<div class="analbum-control analbum-next" title="Next track"><i class="analbum-icon-next2"></i></div>
+						<div class="analbum-control analbum-prev" title="Previous track (Ctrl+Left)"><i class="analbum-icon-previous2"></i></div>
+						<div class="analbum-control analbum-play-pause" title="Play (Space)"><i class="analbum-icon-play3"></i></div>
+						<div class="analbum-control analbum-next" title="Next track (Ctrl+Right)"><i class="analbum-icon-next2"></i></div>
 					</div>
 					<div class="analbum-controls-right">
-						<div class="analbum-control analbum-toggle-lyrics" title="Toggle lyrics">
-							hide lyrics
+						<div class="analbum-control analbum-toggle-lyrics" title="Toggle lyrics (L)">
+							<span>hide</span> lyrics
 						</div>
 					</div>
 				</div>
@@ -628,6 +628,45 @@
 
 			document.addEventListener('click', this.handleDocumentClick);
 
+			this.handleDocumentKeyDown = (e) => {
+				switch (e.code) {
+					case 'Space':
+						e.preventDefault();
+						this.playOrPause();
+						break;
+					case 'KeyM':
+						e.preventDefault();
+						this.toggleMarkers();
+						break;
+					case 'KeyL':
+						e.preventDefault();
+						this.toggleLyrics();
+						break;
+					case 'ArrowLeft':
+						e.preventDefault();
+						if (e.ctrlKey) {
+							this.goToPrevTrack();
+						} else if (e.altKey) {
+							this.goToPrevAlbum();
+						} else {
+							this.seekToTimeRelative(-10);
+						}
+						break;
+					case 'ArrowRight':
+						e.preventDefault();
+						if (e.ctrlKey) {
+							this.goToNextTrack();
+						} else if (e.altKey) {
+							this.goToNextAlbum();
+						} else {
+							this.seekToTimeRelative(10);
+						}
+						break;
+				}
+			};
+
+			document.addEventListener('keydown', this.handleDocumentKeyDown);
+
 			this.wireAudioEvents();
 			this.initializeAlbumAndTrack();
 		}
@@ -670,6 +709,7 @@
 			document.removeEventListener('touchend', this.handleMouseUp);
 			document.removeEventListener('touchmove', this.handleMouseMove);
 			document.removeEventListener('click', this.handleDocumentClick);
+			document.removeEventListener('keydown', this.handleDocumentKeyDown);
 		}
 
 		find(selector) {
@@ -906,7 +946,7 @@
 								const timestamp = parseDurationMs(time);
 								textContainer.setAttribute('title', 'seek to ' + time);
 								textContainer.addEventListener('click', () => {
-									this.seekToTime(timestamp);
+									this.seekToTimeMs(timestamp);
 								});
 							}
 
@@ -1004,7 +1044,7 @@
 					node.style.left = (offset * 100) + '%';
 					const label = node.querySelector('.analbum-track-marker-label');
 					label.addEventListener('click', () => {
-						this.seekToTime(time);
+						this.seekToTimeMs(time);
 					});
 					label.setAttribute('title', `seek to ${prettyTime}`);
 
@@ -1097,8 +1137,12 @@
 			}
 		}
 
-		seekToTime(timeMs) {
+		seekToTimeMs(timeMs) {
 			this.getAudioElement().currentTime = timeMs / 1000;
+		}
+
+		seekToTimeRelative(timeS) {
+			this.seekToTimeMs(Math.max(0, (this.getAudioElement().currentTime + timeS)) * 1000);
 		}
 
 		getMsDurationFromPercent(pct) {
@@ -1115,7 +1159,7 @@
 			if (newTime === null) {
 				return;
 			}
-			this.seekToTime(newTime);
+			this.seekToTimeMs(newTime);
 		}
 
 		goToNextTrack() {
@@ -1130,17 +1174,51 @@
 			this.play();
 		}
 
+		goToPrevAlbum() {
+			if (this.albums.length <= 1) {
+				return;
+			}
+
+			this.pause();
+			const playingAlbum = this.getPlayingAlbum() || this.currentAlbum;
+			let albumIndex = this.albums.indexOf(playingAlbum);
+			if (albumIndex === 0) {
+				albumIndex = this.albums.length;
+			}
+			const prevAlbum = this.albums[albumIndex - 1];
+			this.selectAlbum(prevAlbum);
+			this.selectTrack(prevAlbum.tracks[0]);
+			this.play();
+		}
+
+		goToNextAlbum() {
+			if (this.albums.length <= 1) {
+				return;
+			}
+
+			this.pause();
+			const playingAlbum = this.getPlayingAlbum() || this.currentAlbum;
+			let albumIndex = this.albums.indexOf(playingAlbum);
+			if (albumIndex === this.albums.length - 1) {
+				albumIndex = -1;
+			}
+			const nextAlbum = this.albums[albumIndex + 1];
+			this.selectAlbum(nextAlbum);
+			this.selectTrack(nextAlbum.tracks[0]);
+			this.play();
+		}
+
 		toggleLyrics() {
 			const lyricsContainer = this.find('.analbum-lyrics-container');
 			this.hidingLyrics = !this.hidingLyrics;
 			lyricsContainer.style.display = this.hidingLyrics ? 'none' : 'block';
-			this.find('.analbum-toggle-lyrics').innerText = this.hidingLyrics ? 'show lyrics' : 'hide lyrics';
+			this.find('.analbum-toggle-lyrics span').innerText = this.hidingLyrics ? 'show' : 'hide';
 		}
 
 		toggleMarkers() {
 			this.showingMarkers = !this.showingMarkers;
 			this.container.classList.toggle('analbum-showing-markers');
-			this.find('.analbum-toggle-markers').innerText = this.showingMarkers ? 'hide markers' : 'show markers';
+			this.find('.analbum-toggle-markers span').innerText = this.showingMarkers ? 'hide' : 'show';
 		}
 
 		toggleContributors(show) {
@@ -1224,7 +1302,7 @@
 				'analbum-icon-pause2' :
 				'analbum-icon-play3';
 
-			playPause.setAttribute('title', this.isPlaying() ? 'Pause' : 'Play');
+			playPause.setAttribute('title', this.isPlaying() ? 'Pause (Space)' : 'Play (Space)');
 		}
 
 		mute() {
