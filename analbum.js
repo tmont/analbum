@@ -637,10 +637,18 @@
 						this.playOrPause();
 						break;
 					case 'KeyM':
+						if (e.altKey || e.ctrlKey) {
+							break;
+						}
+
 						e.preventDefault();
 						this.toggleMarkers();
 						break;
 					case 'KeyL':
+						if (e.altKey || e.ctrlKey) {
+							break;
+						}
+
 						e.preventDefault();
 						this.toggleLyrics();
 						break;
