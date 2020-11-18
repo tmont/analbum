@@ -603,6 +603,13 @@
 	flex: 1;
 	font-family: monospace;
 }
+.analbum-track-item .analbum-track-icon {
+	width: 16px;
+	background-repeat: no-repeat;
+	background-size: contain;
+	align-self: stretch;
+	margin-right: 5px;
+}
 
 .analbum-album-item {
 	padding: 10px;

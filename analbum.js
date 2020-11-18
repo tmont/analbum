@@ -179,6 +179,7 @@
 			this.contributors = options.contributors || [];
 			this.recommended = !!options.recommended;
 			this.markers = options.markers || [];
+			this.iconUrl = options.iconUrl || null;
 		}
 	}
 
@@ -244,6 +245,7 @@
 		<i class="analbum-icon-star-full analbum-recommended-badge" title="Recommended listening"></i>
 		<span class="analbum-track-title"></span>
 	</span>
+	<span class="analbum-track-icon"></span>
 	<span class="analbum-track-duration"></span>
 </div>	
 `;
@@ -461,6 +463,12 @@
 						this.selectTrack(track);
 						this.playOrPause();
 					});
+
+					if (track.iconUrl) {
+						const container = trackItem.querySelector('.analbum-track-icon');
+						container.style.backgroundImage = `url(${track.iconUrl})`;
+						container.style.backgroundRepeat = 'none';
+					}
 
 					trackList.appendChild(trackItem);
 				});
