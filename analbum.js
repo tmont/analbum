@@ -639,13 +639,14 @@
 			document.addEventListener('click', this.handleDocumentClick);
 
 			this.handleDocumentKeyDown = (e) => {
+				const modified = e.altKey || e.ctrlKey || e.metaKey;
 				switch (e.code) {
 					case 'Space':
 						e.preventDefault();
 						this.playOrPause();
 						break;
 					case 'KeyM':
-						if (e.altKey || e.ctrlKey) {
+						if (modified) {
 							break;
 						}
 
@@ -653,7 +654,7 @@
 						this.toggleMarkers();
 						break;
 					case 'KeyL':
-						if (e.altKey || e.ctrlKey) {
+						if (modified) {
 							break;
 						}
 
@@ -661,7 +662,7 @@
 						this.toggleLyrics();
 						break;
 					case 'KeyI':
-						if (e.altKey || e.ctrlKey) {
+						if (modified) {
 							break;
 						}
 
