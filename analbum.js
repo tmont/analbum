@@ -213,7 +213,7 @@
 			<div>
 				<div>
 					<span class="analbum-album-title"></span>
-					<i class="analbum-icon-info analbum-album-info-toggle" title="album info"></i>
+					<i class="analbum-icon-info analbum-album-info-toggle" title="album info (I)"></i>
 				</div>
 				<div class="analbum-album-date"></div>
 			</div>
@@ -659,6 +659,14 @@
 
 						e.preventDefault();
 						this.toggleLyrics();
+						break;
+					case 'KeyI':
+						if (e.altKey || e.ctrlKey) {
+							break;
+						}
+
+						e.preventDefault();
+						this.toggleAlbumInfo(this.currentAlbum);
 						break;
 					case 'ArrowLeft':
 						e.preventDefault();

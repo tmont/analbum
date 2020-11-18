@@ -33,6 +33,7 @@ The code is pretty spaghetti-like, but it probably works.
 - Deep-links directly to an album or track via query string parameters using `history.replaceState()`
 - Time markers with annotations
 - Keyboard shortcuts
+    - `I`: toggle album info
     - `L`: toggle lyrics
     - `M`: toggle markers
     - `Space`: play/pause
