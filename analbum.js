@@ -331,7 +331,7 @@
 					</div>
 					<div class="analbum-controls-center">
 						<div class="analbum-control analbum-prev" title="Previous track (Ctrl+Left)"><i class="analbum-icon-previous2"></i></div>
-						<div class="analbum-control analbum-play-pause" title="Play (Space)"><i class="analbum-icon-play3"></i></div>
+						<div class="analbum-control analbum-play-pause" title="Play (Space, K)"><i class="analbum-icon-play3"></i></div>
 						<div class="analbum-control analbum-next" title="Next track (Ctrl+Right)"><i class="analbum-icon-next2"></i></div>
 					</div>
 					<div class="analbum-controls-right">
@@ -1333,7 +1333,7 @@
 				'analbum-icon-pause2' :
 				'analbum-icon-play3';
 
-			playPause.setAttribute('title', this.isPlaying() ? 'Pause (Space or K)' : 'Play (Space or K)');
+			playPause.setAttribute('title', this.isPlaying() ? 'Pause (Space, K)' : 'Play (Space, K)');
 		}
 
 		mute() {
