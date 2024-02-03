@@ -642,6 +642,7 @@
 				const modified = e.altKey || e.ctrlKey || e.metaKey;
 				switch (e.code) {
 					case 'Space':
+					case 'KeyK':
 						e.preventDefault();
 						this.playOrPause();
 						break;
@@ -1328,7 +1329,7 @@
 				'analbum-icon-pause2' :
 				'analbum-icon-play3';
 
-			playPause.setAttribute('title', this.isPlaying() ? 'Pause (Space)' : 'Play (Space)');
+			playPause.setAttribute('title', this.isPlaying() ? 'Pause (Space or K)' : 'Play (Space or K)');
 		}
 
 		mute() {

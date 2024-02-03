@@ -36,7 +36,7 @@ The code is pretty spaghetti-like, but it probably works.
     - `I`: toggle album info
     - `L`: toggle lyrics
     - `M`: toggle markers
-    - `Space`: play/pause
+    - `K` or `Space`: play/pause
     - `Left`: seek backward 10 seconds
     - `Right`: seek forward 10 seconds
     - `Ctrl+Left`: go to previous track
