@@ -936,16 +936,8 @@
 				return;
 			}
 
-
 			const playingAlbum = this.getPlayingAlbum();
 			const track = this.currentTrack;
-
-			if (window.history) {
-				const url = new URL(window.location.href);
-				url.searchParams.set('album', playingAlbum.name);
-				url.searchParams.set('track', track.name);
-				window.history.replaceState(null, '', url.href);
-			}
 
 			const lyricsContainer = this.find('.analbum-lyrics-container');
 			const lyricsLines = this.find('.analbum-lyrics-lines');
@@ -1145,6 +1137,13 @@
 			// no track loaded or current track finished
 			if (!this.currentTrack || audio.ended) {
 				this.setNextTrack();
+			}
+
+			if (this.currentAlbum && this.currentTrack && window.history) {
+				const url = new URL(window.location.href);
+				url.searchParams.set('album', this.currentAlbum.name);
+				url.searchParams.set('track', this.currentTrack.name);
+				window.history.replaceState(null, '', url.href);
 			}
 
 			audio.play();
