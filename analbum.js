@@ -673,9 +673,11 @@
 					case 'ArrowLeft':
 						e.preventDefault();
 						if (e.ctrlKey) {
-							this.goToPrevTrack();
-						} else if (e.altKey) {
-							this.goToPrevAlbum();
+							if (e.shiftKey) {
+								this.goToPrevAlbum();
+							} else {
+								this.goToPrevTrack();
+							}
 						} else {
 							this.seekToTimeRelative(-10);
 						}
@@ -683,9 +685,11 @@
 					case 'ArrowRight':
 						e.preventDefault();
 						if (e.ctrlKey) {
-							this.goToNextTrack();
-						} else if (e.altKey) {
-							this.goToNextAlbum();
+							if (e.shiftKey) {
+								this.goToNextAlbum();
+							} else {
+								this.goToNextTrack();
+							}
 						} else {
 							this.seekToTimeRelative(10);
 						}

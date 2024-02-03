@@ -41,8 +41,8 @@ The code is pretty spaghetti-like, but it probably works.
     - `Right`: seek forward 10 seconds
     - `Ctrl+Left`: go to previous track
     - `Ctrl+Right`: go to next track
-    - `Alt+Left`: go to previous album
-    - `Alt+Right`: go to next album
+    - `Ctrl+Shift+Left`: go to previous album
+    - `Ctrl+Shift+Right`: go to next album
 - Works on Chrome and Firefox, and maybe some other browsers
 
 ## Usage
