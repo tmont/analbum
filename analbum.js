@@ -643,6 +643,10 @@
 				switch (e.code) {
 					case 'Space':
 					case 'KeyK':
+						if (modified) {
+							break;
+						}
+
 						e.preventDefault();
 						this.playOrPause();
 						break;
