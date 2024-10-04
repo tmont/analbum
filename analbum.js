@@ -999,7 +999,18 @@
 			setText('.analbum-now-playing .analbum-track-title', track.name);
 			setText('.analbum-now-playing .analbum-album-title', playingAlbum.name);
 			setText('.analbum-now-playing .analbum-album-artist', playingAlbum.artist);
-			setText('.analbum-now-playing .analbum-album-date', track.date);
+
+			let trackDate = track.date?.toString() || '';
+			if (/\d{4}-\d\d-\d\d/.test(trackDate)) {
+				const f = new Intl.DateTimeFormat([], {
+					dateStyle: 'long',
+					timeZone: 'UTC',
+				});
+
+				trackDate = f.format(new Date(trackDate));
+			}
+
+			setText('.analbum-now-playing .analbum-album-date', trackDate);
 
 			const coverArt = this.find('.analbum-now-playing .analbum-album-info-art')
 			this.setAlbumArt(playingAlbum, coverArt);
