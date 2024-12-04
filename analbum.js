@@ -693,6 +693,13 @@
 							this.seekToTimeRelative(isArrowLeft ? -10 : 10);
 						}
 						break;
+					case 'Escape':
+						this.toggleContributors(false);
+						if (this.showingMarkers) {
+							this.toggleMarkers();
+						}
+						this.toggleAlbumInfo();
+						break;
 				}
 			};
 
