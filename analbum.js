@@ -342,6 +342,10 @@
 						<div class="analbum-control analbum-toggle-lyrics" title="Toggle lyrics (L)">
 							<span>hide</span> lyrics
 						</div>
+						<label class="analbum-control analbum-lyrics-auto-scroll">
+							<input type="checkbox" checked />
+							auto-scroll
+						</label>
 					</div>
 				</div>
 			</div>
@@ -394,6 +398,7 @@
 			this.showingGlobalInfo = false;
 			this.showingAlbumInfo = false;
 			this.showingMarkers = false;
+			this.autoScrollLyrics = true;
 		}
 
 		mount(element) {
@@ -726,6 +731,12 @@
 
 			document.addEventListener('keydown', this.handleDocumentKeyDown);
 
+			const autoScrollInput = this.find('.analbum-lyrics-auto-scroll input[type="checkbox"]');
+			this.autoScrollLyrics = autoScrollInput.checked;
+			autoScrollInput.addEventListener('change', (e) => {
+				this.autoScrollLyrics = e.target.checked;
+			});
+
 			this.wireAudioEvents();
 			this.initializeAlbumAndTrack();
 		}
@@ -812,12 +823,17 @@
 				const lyricData = this.currentTrack.lyrics.getLyricsAt(timestamp);
 				if (lyricData) {
 					try {
+						const lyricsContainer = this.find('.analbum-lyrics-lines');
 						const line = this.find(`.analbum-lyric-line[data-lyric-index="${lyricData.index}"]`);
 
 						this.container.querySelectorAll('.analbum-lyric-current').forEach((line) => {
 							line.classList.remove('analbum-lyric-current');
 						});
 						line.classList.add('analbum-lyric-current');
+
+						if (this.autoScrollLyrics && line.offsetTop - lyricsContainer.scrollTop > lyricsContainer.scrollHeight) {
+							lyricsContainer.scrollTop = line.offsetTop + 50;
+						}
 					} catch (e) {
 						// line for timestamp not found
 					}

@@ -436,6 +436,7 @@
 	display: none;
 	height: 100%;
 	cursor: zoom-in;
+	color: #999999;
 }
 
 .analbum-album-art-custom img {
@@ -475,7 +476,9 @@
 	transform: translateX(-50%);
 	display: flex;
 }
-.analbum-control.analbum-toggle-lyrics, .analbum-control.analbum-toggle-markers {
+.analbum-control.analbum-toggle-lyrics,
+.analbum-control.analbum-lyrics-auto-scroll,
+.analbum-control.analbum-toggle-markers {
 	font-size: 12px;
 	font-variant: small-caps;
 }
@@ -483,6 +486,7 @@
 .analbum-controls-right {
 	display: flex;
 	margin-left: auto;
+	align-items: center;
 }
 
 .analbum-downloads {
@@ -554,7 +558,8 @@
 	border-bottom: none;
 }
 
-.analbum-no-lyrics .analbum-toggle-lyrics {
+.analbum-no-lyrics .analbum-toggle-lyrics,
+.analbum-no-lyrics .analbum-lyrics-auto-scroll {
 	display: none;
 }
 

@@ -29,7 +29,7 @@
 							date: '1808-12-22',
 							trackNum: 1,
 							sources: [
-								analbum.source('./audio/beethoven-no5_1.mp3', {
+								analbum.source('./example/audio/beethoven-no5_1.mp3', {
 									size: 8064128,
 									mimetype: 'audio/mpeg',
 								}),
@@ -49,13 +49,14 @@
 								analbum.marker('7:42', 'Coda'),
 								analbum.marker('8:05', 'Finale'),
 							],
+							lyrics: analbum.lyrics('./example/lyrics/lorem-ipsum.lrc'),
 						}),
 						analbum.track('Piano Sonata No. 14 in C♯ minor, Op. 27, No. 2 - Quasi una fantasia - III: Presto Agitato', {
 							duration: 493714,
 							date: 1801,
 							trackNum: 2,
 							sources: [
-								analbum.source('./audio/beethoven-moonlight_3.ogg', {
+								analbum.source('./example/audio/beethoven-moonlight_3.ogg', {
 									size: 4823167,
 									mimetype: 'audio/ogg',
 								}),
@@ -70,7 +71,7 @@
 						date: '2020',
 						artist: 'Ludwig van Beethoven',
 						description: 'A tiny collection of public domain Beethoven works.',
-						coverArt: './artwork/beethoven.jpeg',
+						coverArt: './example/artwork/beethoven.jpeg',
 					},
 				),
 				analbum.album(
@@ -81,7 +82,7 @@
 							date: 1839,
 							trackNum: 1,
 							sources: [
-								analbum.source('./audio/chopin-hades.mp3', {
+								analbum.source('./example/audio/chopin-hades.mp3', {
 									size: 1745832,
 									mimetype: 'audio/mpeg',
 								}),
@@ -103,7 +104,7 @@
 							date: 1847,
 							trackNum: 2,
 							sources: [
-								analbum.source('./audio/chopin-waltz-64_2.ogg', {
+								analbum.source('./example/audio/chopin-waltz-64_2.ogg', {
 									size: 2825719,
 									mimetype: 'audio/ogg',
 								}),
