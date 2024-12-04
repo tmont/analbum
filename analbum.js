@@ -207,7 +207,9 @@
 			<div class="analbum-album-art-default">
 				<span class="analbum-icon-music"></span>
 			</div>
-			<img class="analbum-album-art-custom" alt="custom album art" />
+			<a href="#" target="_blank" class="analbum-album-art-custom">
+				<img alt="custom album art" />
+			</a>
 		</div>
 		<div class="analbum-album-item-metadata-container">
 			<div>
@@ -275,7 +277,9 @@
 						<div class="analbum-album-art-default">
 							<span class="analbum-icon-music"></span>
 						</div>
-						<img class="analbum-album-art-custom" alt="custom album art" />
+						<a href="#" target="_blank" class="analbum-album-art-custom">
+							<img alt="custom album art" />
+						</a>
 					</div>
 					<div class="analbum-track-info-detail">
 						<div class="analbum-track-title"></div>
@@ -1179,7 +1183,8 @@
 			if (album.coverArt) {
 				defaultArt.style.display = 'none';
 				customArt.style.display = 'block';
-				customArt.src = album.coverArt;
+				customArt.href = album.coverArt;
+				customArt.querySelector('img').src = album.coverArt;
 			} else {
 				defaultArt.style.display = 'flex';
 				customArt.style.display = 'none';

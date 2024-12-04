@@ -435,6 +435,11 @@
 .analbum-album-art-custom {
 	display: none;
 	height: 100%;
+	cursor: zoom-in;
+}
+
+.analbum-album-art-custom img {
+	height: 100%;
 }
 
 .analbum-track-info {
