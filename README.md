@@ -43,7 +43,9 @@ The code is pretty spaghetti-like, but it probably works.
     - `Ctrl+Right`: go to next track
     - `Ctrl+Shift+Left`: go to previous album
     - `Ctrl+Shift+Right`: go to next album
-- Works on Chrome and Firefox, and maybe some other browsers
+    - `Escape`: hides markers/info/contributors
+- Supports play/pause/previous track/next track controls and metadata for media session controllers
+  (e.g. the media keys on a keyboard)
 
 ## Usage
 

@@ -638,6 +638,23 @@
 
 			document.addEventListener('click', this.handleDocumentClick);
 
+			try {
+				navigator.mediaSession.setActionHandler('play', () => {
+					this.play();
+				});
+				navigator.mediaSession.setActionHandler('pause', () => {
+					this.pause();
+				});
+				navigator.mediaSession.setActionHandler('nexttrack', () => {
+					this.goToNextTrack();
+				});
+				navigator.mediaSession.setActionHandler('previoustrack', () => {
+					this.goToPrevTrack();
+				});
+			} catch (e) {
+				console.error('Could not bind to mediaSession', e);
+			}
+
 			this.handleDocumentKeyDown = (e) => {
 				const modified = e.altKey || e.ctrlKey || e.metaKey;
 				switch (e.code) {
@@ -834,6 +851,12 @@
 			});
 			audio.addEventListener('loadedmetadata', () => {
 				this.updateProgress();
+			});
+			audio.addEventListener('play', () => {
+				this.updateMenuIcons();
+			});
+			audio.addEventListener('pause', () => {
+				this.updateMenuIcons();
 			});
 		}
 
@@ -1127,6 +1150,24 @@
 				});
 			} else {
 				this.find('.analbum-toggle-markers').style.display = 'none';
+			}
+
+			try {
+				const metadata = new MediaMetadata({
+					title: track.name,
+					artist: playingAlbum.artist,
+					album: playingAlbum.name,
+				});
+
+				if (playingAlbum.coverArt) {
+					metadata.artwork = [{
+						src: playingAlbum.coverArt,
+					}];
+				}
+
+				navigator.mediaSession.metadata = metadata;
+			} catch {
+				console.error('Could not set mediaSession metadata', e);
 			}
 
 			this.updateProgress();
