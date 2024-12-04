@@ -675,27 +675,22 @@
 						this.toggleAlbumInfo(this.currentAlbum);
 						break;
 					case 'ArrowLeft':
-						e.preventDefault();
-						if (e.ctrlKey) {
-							if (e.shiftKey) {
-								this.goToPrevAlbum();
-							} else {
-								this.goToPrevTrack();
-							}
-						} else {
-							this.seekToTimeRelative(-10);
-						}
-						break;
 					case 'ArrowRight':
+						if (e.altKey) {
+							break;
+						}
+
+						const isArrowLeft = e.code === 'ArrowLeft';
+
 						e.preventDefault();
 						if (e.ctrlKey) {
 							if (e.shiftKey) {
-								this.goToNextAlbum();
+								isArrowLeft ? this.goToPrevAlbum() : this.goToNextAlbum();
 							} else {
-								this.goToNextTrack();
+								isArrowLeft ? this.goToPrevTrack() : this.goToNextTrack();
 							}
 						} else {
-							this.seekToTimeRelative(10);
+							this.seekToTimeRelative(isArrowLeft ? -10 : 10);
 						}
 						break;
 				}
