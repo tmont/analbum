@@ -280,14 +280,18 @@
 	const markerTemplate = `
 <div class="analbum-track-marker">
 	<div class="analbum-track-marker-line"></div>
-	<div class="analbum-track-marker-label">
+	<a class="analbum-track-marker-label" href="#">
 		<div class="analbum-track-marker-time"></div>
 		<div class="analbum-divider"></div>
 		<div class="analbum-track-marker-content"></div>
-	</div>
+	</a>
 </div>`;
 
-	const lyricLineTemplate = `<div class="analbum-lyric-line"><a href="#"></a></div>`;
+	const lyricLineTemplate = `
+<div class="analbum-lyric-line">
+	<span class="analbum-lyric-line-time analbum-sm-hide"></span>
+	<a href="#"></a>
+</div>`;
 
 	const template = `
 <div class="analbum-container">
@@ -367,8 +371,8 @@
 						<div class="analbum-control analbum-toggle-lyrics" title="Toggle lyrics (L)">
 							<span>hide</span> lyrics
 						</div>
-						<label class="analbum-control analbum-lyrics-auto-scroll">
-							<input type="checkbox" checked />
+						<label class="analbum-control analbum-lyrics-auto-scroll analbum-sm-hide" title="Keep current lyric line in viewport">
+							<input type="checkbox" />
 							auto-scroll
 						</label>
 					</div>
@@ -861,8 +865,15 @@
 								});
 								line.classList.add('analbum-lyric-current');
 
-								if (this.autoScrollLyrics && line.offsetTop - lyricsContainer.scrollTop > lyricsContainer.scrollHeight) {
-									lyricsContainer.scrollTop = line.offsetTop + 50;
+								if (this.autoScrollLyrics) {
+									const lineTop = line.offsetTop;
+									const scrollableHeight = lyricsContainer.offsetHeight;
+									const fudge = 50;
+									const diff = lineTop - lyricsContainer.scrollTop;
+
+									if (diff < fudge || diff > scrollableHeight - fudge) {
+										lyricsContainer.scrollTop = Math.max(0, lineTop - scrollableHeight + fudge);
+									}
 								}
 							} catch (e) {
 								// line for timestamp not found
@@ -1058,7 +1069,6 @@
 								textContainer.appendChild(document.createTextNode(line));
 							}
 
-
 							const time = times[i];
 							if (time) {
 								const timestamp = parseDurationMs(time);
@@ -1067,6 +1077,8 @@
 									e.preventDefault();
 									this.seekToTimeMs(timestamp);
 								});
+
+								cloned.querySelector('.analbum-lyric-line-time').appendChild(document.createTextNode(time));
 							}
 
 							if (this.currentAlbum) {
@@ -1177,7 +1189,9 @@
 					node.querySelector('.analbum-track-marker-time').innerText = prettyTime;
 					node.style.left = (offset * 100) + '%';
 					const label = node.querySelector('.analbum-track-marker-label');
-					label.addEventListener('click', () => {
+					label.href = track.getUrl(playingAlbum, prettyTime);
+					label.addEventListener('click', (e) => {
+						e.preventDefault();
 						this.seekToTimeMs(time);
 					});
 					label.setAttribute('title', `seek to ${prettyTime}`);

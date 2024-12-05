@@ -256,6 +256,7 @@
 	font-size: 14px;
 	margin-top: 10px;
 	line-height: 22px;
+	position: relative;
 }
 .analbum-lyric-line a {
 	color: #ececec;
@@ -263,6 +264,18 @@
 .analbum-lyric-current a {
 	font-weight: bold;
 	color: #df70ff;
+	text-shadow: 1px 1px 1px black;
+}
+.analbum-lyric-line-time {
+	position: absolute;
+	left: 4px;
+	font-family: monospace;
+	opacity: 0.1;
+}
+
+.analbum-lyric-current .analbum-lyric-line-time {
+	opacity: 0.35;
+	font-weight: bold;
 	text-shadow: 1px 1px 1px black;
 }
 
@@ -692,7 +705,7 @@
 	z-index: 1;
 	text-align: center;
 	display: none;
-	opacity: 0.75;
+	opacity: 0.9;
 }
 
 .analbum-track-marker:hover {
@@ -846,5 +859,8 @@
 	.analbum-track-credits-popup {
 		max-width: 240px;
 		white-space: normal;
+	}
+	.analbum-sm-hide {
+		display: none;
 	}
 }
