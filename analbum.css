@@ -129,6 +129,10 @@
 	font-family: Lato, "Noto Sans", sans-serif;
 }
 
+.analbum-container a {
+	text-decoration: none;
+}
+
 .analbum-info-global {
 	position: absolute;
 	top: -11px;
@@ -248,16 +252,15 @@
 	text-align: center;
 	max-height: 500px;
 	overflow: auto;
-	color: #ececec;
 	font-family: "Libre Baskerville", "Noto Serif", serif;
 	font-size: 14px;
 	margin-top: 10px;
 	line-height: 22px;
 }
-.analbum-lyric-line span {
-	cursor: pointer;
+.analbum-lyric-line a {
+	color: #ececec;
 }
-.analbum-lyric-current {
+.analbum-lyric-current a {
 	font-weight: bold;
 	color: #df70ff;
 	text-shadow: 1px 1px 1px black;

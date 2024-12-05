@@ -46,6 +46,7 @@ The code is pretty spaghetti-like, but it probably works.
     - `Escape`: hides markers/info/contributors
 - Supports play/pause/previous track/next track controls and metadata for media session controllers
   (e.g. the media keys on a keyboard)
+- Deep link to specific time in track via `time` query string parameter
 
 ## Usage
 

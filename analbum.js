@@ -87,6 +87,7 @@
 			this.lrcFile = lrcFile;
 			this.lyricLines = null;
 			this.lyricTimes = null;
+			this.req = null;
 		}
 
 		async load() {
@@ -101,8 +102,8 @@
 			this.lyricTimes = [];
 
 			try {
-				const res = await fetch(this.lrcFile);
-				const text = await res.text();
+				this.req = fetch(this.lrcFile).then(res => res.text());
+				const text = await this.req;
 				const lines = text.split('\n');
 				lines.forEach((line) => {
 					const matches = /^\[(\d\d:\d\d)\.\d\d](.*)$/.exec(line);
@@ -163,6 +164,16 @@
 				index: prev,
 			};
 		}
+
+		async getLyricsAtDeferred(timestamp) {
+			if (!this.req) {
+				return;
+			}
+
+			await this.req;
+
+			return this.getLyricsAt(timestamp);
+		}
 	}
 
 	class Track {
@@ -180,6 +191,20 @@
 			this.recommended = !!options.recommended;
 			this.markers = options.markers || [];
 			this.iconUrl = options.iconUrl || null;
+		}
+
+		getUrl(album, time) {
+			const url = new URL(window.location.href);
+			url.searchParams.set('album', album.name);
+			url.searchParams.set('track', this.name);
+
+			if (time) {
+				url.searchParams.set('time', time);
+			} else {
+				url.searchParams.delete('time');
+			}
+
+			return url.href;
 		}
 	}
 
@@ -241,7 +266,7 @@
 `;
 
 	const trackItemTemplate = `
-<div class="analbum-track-item">
+<a class="analbum-track-item" href="#">
 	<span class="analbum-track-number"></span>
 	<span class="analbum-track-title-container">
 		<i class="analbum-icon-star-full analbum-recommended-badge" title="Recommended listening"></i>
@@ -249,7 +274,7 @@
 	</span>
 	<span class="analbum-track-icon"></span>
 	<span class="analbum-track-duration"></span>
-</div>	
+</a>	
 `;
 
 	const markerTemplate = `
@@ -262,7 +287,7 @@
 	</div>
 </div>`;
 
-	const lyricLineTemplate = `<div class="analbum-lyric-line"><span></span></div>`;
+	const lyricLineTemplate = `<div class="analbum-lyric-line"><a href="#"></a></div>`;
 
 	const template = `
 <div class="analbum-container">
@@ -467,11 +492,15 @@
 					trackItem.querySelector('.analbum-track-title').appendChild(text(track.name));
 					trackItem.querySelector('.analbum-track-number').appendChild(text(leftPadZero(track.trackNum || (i + 1))));
 					trackItem.querySelector('.analbum-track-duration').appendChild(text(prettyDurationFromMs(track.duration)));
-					trackItem.addEventListener('click', () => {
+					trackItem.addEventListener('click', (e) => {
+						e.preventDefault();
+
 						this.pause();
 						this.selectTrack(track);
 						this.playOrPause();
 					});
+
+					trackItem.href = track.getUrl(album);
 
 					if (track.iconUrl) {
 						const container = trackItem.querySelector('.analbum-track-icon');
@@ -820,24 +849,26 @@
 
 			if (this.currentTrack.lyrics) {
 				const timestamp = prettyDurationFromS(audio.currentTime);
-				const lyricData = this.currentTrack.lyrics.getLyricsAt(timestamp);
-				if (lyricData) {
-					try {
-						const lyricsContainer = this.find('.analbum-lyrics-lines');
-						const line = this.find(`.analbum-lyric-line[data-lyric-index="${lyricData.index}"]`);
+				this.currentTrack.lyrics.getLyricsAtDeferred(timestamp)
+					.then((lyricData) => {
+						if (lyricData) {
+							try {
+								const lyricsContainer = this.find('.analbum-lyrics-lines');
+								const line = this.find(`.analbum-lyric-line[data-lyric-index="${lyricData.index}"]`);
 
-						this.container.querySelectorAll('.analbum-lyric-current').forEach((line) => {
-							line.classList.remove('analbum-lyric-current');
-						});
-						line.classList.add('analbum-lyric-current');
+								this.container.querySelectorAll('.analbum-lyric-current').forEach((line) => {
+									line.classList.remove('analbum-lyric-current');
+								});
+								line.classList.add('analbum-lyric-current');
 
-						if (this.autoScrollLyrics && line.offsetTop - lyricsContainer.scrollTop > lyricsContainer.scrollHeight) {
-							lyricsContainer.scrollTop = line.offsetTop + 50;
+								if (this.autoScrollLyrics && line.offsetTop - lyricsContainer.scrollTop > lyricsContainer.scrollHeight) {
+									lyricsContainer.scrollTop = line.offsetTop + 50;
+								}
+							} catch (e) {
+								// line for timestamp not found
+							}
 						}
-					} catch (e) {
-						// line for timestamp not found
-					}
-				}
+					});
 			}
 
 			if (!this.draggingProgressBar) {
@@ -980,6 +1011,19 @@
 			});
 
 			audio.load();
+
+			const currentUrl = new URL(window.location.href);
+			const seekTo = currentUrl.searchParams.get('time');
+			if (seekTo && /^(\d+:\d\d|\d+)$/.test(seekTo)) {
+				const seekToMs = /^\d+$/.test(seekTo) ?
+					parseInt(seekTo, 10) * 1000 :
+					seekTo.split(':')
+						.map((x, i) => parseInt(x, 10) * (i === 0 ? 60 : 1))
+						.reduce((ms, sec) => ms + (sec * 1000), 0);
+
+				this.seekToTimeMs(seekToMs);
+				this.updateProgress();
+			}
 		}
 
 		updateTrackInfo() {
@@ -1007,20 +1051,26 @@
 						lines.forEach((line, i) => {
 							const cloned = lineNode.cloneNode(true);
 							cloned.setAttribute('data-lyric-index', i);
-							const textContainer = cloned.querySelector('span');
+							const textContainer = cloned.querySelector('a');
 							if (!line) {
 								textContainer.appendChild(document.createElement('br'));
 							} else {
 								textContainer.appendChild(document.createTextNode(line));
 							}
 
+
 							const time = times[i];
 							if (time) {
 								const timestamp = parseDurationMs(time);
 								textContainer.setAttribute('title', 'seek to ' + time);
-								textContainer.addEventListener('click', () => {
+								textContainer.addEventListener('click', (e) => {
+									e.preventDefault();
 									this.seekToTimeMs(timestamp);
 								});
+							}
+
+							if (this.currentAlbum) {
+								textContainer.href = track.getUrl(this.currentAlbum, time);
 							}
 
 							lyricsLines.appendChild(cloned);
@@ -1224,10 +1274,7 @@
 			}
 
 			if (this.currentAlbum && this.currentTrack && window.history) {
-				const url = new URL(window.location.href);
-				url.searchParams.set('album', this.currentAlbum.name);
-				url.searchParams.set('track', this.currentTrack.name);
-				window.history.replaceState(null, '', url.href);
+				window.history.replaceState(null, '', this.currentTrack.getUrl(this.currentAlbum));
 			}
 
 			audio.play();
