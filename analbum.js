@@ -749,7 +749,11 @@
 								isArrowLeft ? this.goToPrevTrack() : this.goToNextTrack();
 							}
 						} else {
-							this.seekToTimeRelative(isArrowLeft ? -10 : 10);
+							let seekAmount = 10;
+							if (e.shiftKey) {
+								seekAmount = 3;
+							}
+							this.seekToTimeRelative(isArrowLeft ? -seekAmount : seekAmount);
 						}
 						break;
 					case 'Escape':
