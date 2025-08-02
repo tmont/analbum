@@ -1202,7 +1202,7 @@
 
 					progressBar.appendChild(node);
 
-					const expectedWidth = (marker.label.length * 5.25) + 13;
+					const expectedWidth = (marker.label.length * 5.25) + 15;
 
 					const invalidLevels = {};
 					for (let j = 0; j < prevNodes.length; j++) {
