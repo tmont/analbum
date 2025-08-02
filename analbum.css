@@ -232,6 +232,8 @@
 	background-color: #363636;
 	color: #eeeeee;
 	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .analbum-now-playing-info {
@@ -240,6 +242,8 @@
 
 .analbum-lyrics-container {
 	padding: 0 10px 10px 10px;
+	flex: 1;
+	overflow: auto;
 }
 
 .analbum-divider {
@@ -251,16 +255,26 @@
 
 .analbum-lyrics-lines {
 	text-align: center;
-	max-height: 500px;
-	overflow: auto;
 	font-family: "Libre Baskerville", "Noto Serif", serif;
 	font-size: 14px;
 	margin-top: 10px;
-	line-height: 22px;
+	line-height: 20px;
 	position: relative;
+}
+
+.analbum-lyrics-lines table {
+	border-collapse: collapse;
+	width: 100%;
+}
+.analbum-lyrics-lines td {
+	padding: 0;
 }
 .analbum-lyric-line a {
 	color: #ececec;
+}
+
+.analbum-lyrics-lines .analbum-lyric-link {
+	padding-right: 56px; /* attempt to make lyrics center aligned with the controls */
 }
 .analbum-lyric-current a {
 	font-weight: bold;
@@ -268,10 +282,10 @@
 	text-shadow: 1px 1px 1px black;
 }
 .analbum-lyric-line-time {
-	position: absolute;
-	left: 4px;
 	font-family: monospace;
 	opacity: 0.1;
+	width: 56px;
+	text-align: center;
 }
 
 .analbum-lyric-current .analbum-lyric-line-time {
@@ -797,6 +811,10 @@
 	margin-left: -10px;
 }
 
+.analbum-checkbox-text {
+	position: relative;
+	top: -2px;
+}
 
 @media (max-width: 1220px) {
 	.analbum-container {
@@ -867,5 +885,12 @@
 
 	.analbum-sm-hide {
 		display: none;
+	}
+
+	.analbum-lyric-line-time {
+		width: 0;
+	}
+	.analbum-lyrics-lines .analbum-lyric-link {
+		padding-right: 0;
 	}
 }

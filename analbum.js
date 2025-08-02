@@ -288,10 +288,12 @@
 </div>`;
 
 	const lyricLineTemplate = `
-<div class="analbum-lyric-line">
-	<span class="analbum-lyric-line-time analbum-sm-hide"></span>
-	<a href="#"></a>
-</div>`;
+<table>
+	<tr class="analbum-lyric-line">
+		<td class="analbum-lyric-line-time"><span class="analbum-sm-hide"></span></td>
+		<td class="analbum-lyric-link"><a href="#"></a></td>
+	</tr>
+</table>`;
 
 	const template = `
 <div class="analbum-container">
@@ -373,7 +375,7 @@
 						</div>
 						<label class="analbum-control analbum-lyrics-auto-scroll analbum-sm-hide" title="Keep current lyric line in viewport">
 							<input type="checkbox" />
-							auto-scroll
+							<span class="analbum-checkbox-text">scroll</span>
 						</label>
 					</div>
 				</div>
@@ -1056,11 +1058,14 @@
 			const lyricsLines = this.find('.analbum-lyrics-lines');
 			lyricsLines.innerHTML = '';
 
+			const table = document.createElement('table');
+			lyricsLines.appendChild(table);
+
 			if (track.lyrics) {
 				this.container.classList.remove('analbum-no-lyrics');
 				lyricsContainer.style.display = this.hidingLyrics ? 'none' : 'block';
 
-				const lineNode = parseTemplate(lyricLineTemplate);
+				const lineNode = parseTemplate(lyricLineTemplate).querySelector('tr');
 				track.lyrics.load()
 					.then(({ lines, times }) => {
 						lines.forEach((line, i) => {
@@ -1082,14 +1087,15 @@
 									this.seekToTimeMs(timestamp);
 								});
 
-								cloned.querySelector('.analbum-lyric-line-time').appendChild(document.createTextNode(time));
+								cloned.querySelector('.analbum-lyric-line-time span')
+									.appendChild(document.createTextNode(time));
 							}
 
 							if (this.currentAlbum) {
 								textContainer.href = track.getUrl(this.currentAlbum, time);
 							}
 
-							lyricsLines.appendChild(cloned);
+							table.appendChild(cloned);
 						});
 					})
 					.catch((e) => {

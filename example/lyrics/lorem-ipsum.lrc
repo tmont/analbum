@@ -5,10 +5,11 @@
 
 [00:00.00]
 
+[00:30.00]x
 [01:00.00]Lorem ipsum dolor sit amet
 [01:07.00]Consectetur adipiscing elit
 [01:12.00]Sed do eiusmod tempor
-[01:16.00]Incididunt ut labore et dolore magna aliqua
+[01:16.00]Incididunt ut labore et dolore magna aliqua a really long line that should wrap
 
 [01:22.00]
 
